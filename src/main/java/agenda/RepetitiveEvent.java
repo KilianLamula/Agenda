@@ -21,10 +21,14 @@ public class RepetitiveEvent extends Event {
      * <LI>ChronoUnit.MONTHS for monthly repetitions</LI>
      * </UL>
      */
+    
+    protected ChronoUnit frequency;
+    protected ArrayList<LocalDate> lesExceptions;
+    
     public RepetitiveEvent(String title, LocalDateTime start, Duration duration, ChronoUnit frequency) {
         super(title, start, duration);
-        // TODO : implémenter cette méthode
-        throw new UnsupportedOperationException("Pas encore implémenté");
+        this.frequency = frequency;
+        this.lesExceptions = new ArrayList<LocalDate>();
     }
 
     /**
@@ -33,8 +37,7 @@ public class RepetitiveEvent extends Event {
      * @param date the event will not occur at this date
      */
     public void addException(LocalDate date) {
-        // TODO : implémenter cette méthode
-        throw new UnsupportedOperationException("Pas encore implémenté");
+        lesExceptions.add(date);
     }
 
     /**
@@ -42,8 +45,52 @@ public class RepetitiveEvent extends Event {
      * @return the type of repetition
      */
     public ChronoUnit getFrequency() {
-        // TODO : implémenter cette méthode
-        throw new UnsupportedOperationException("Pas encore implémenté");    
+        return this.frequency;
+    }
+    
+    //On redéfinit la méthode isInDay dans cette classe car il peut y avoir des exceptions à présent et de plus il y a une certaine fréquence    
+    
+    public boolean isInDay(LocalDate aDay) {
+        
+        boolean res = false;
+        
+        if(this.getStart().toLocalDate().equals(aDay)) res = true;
+        
+        if(lesExceptions.contains(aDay)) res = false;
+        
+        //Cas jour
+        if(frequency == ChronoUnit.DAYS){
+            if(this.getStart().toLocalDate().equals(aDay) || this.getStart().toLocalDate().isBefore(aDay)){
+                res = true;
+            }
+        }
+        
+        //Cas semaine
+        if(frequency == ChronoUnit.WEEKS){
+            //Il y a 53 jours dans une année, on est obligé de toutes les vérifier
+            for(int i = 0; i < 53; i++){
+                //On vérifie à chaque fois en ajoutant une semaine si le jour correspond
+                if (this.getStart().toLocalDate().plus(i, ChronoUnit.WEEKS).equals(aDay)) return true;
+            }
+            //Sinon false
+            return false;
+        }
+        
+        //Cas mois
+        if(frequency == ChronoUnit.MONTHS){
+            //De la même façon on vérifie tous les mois de l'année (x12)
+            for(int i = 0; i < 12; i++){
+                //On vérifie à chaque fois en ajoutant une mois si le jour correspond
+                if (this.getStart().toLocalDate().plus(i, ChronoUnit.MONTHS).equals(aDay)) return true;
+            }
+            //Sinon false
+            return false;
+        }
+        return res;
     }
 
+    @Override
+    public String toString() {
+        return "RepetitiveEvent{" + "frequency=" + frequency + ", lesExceptions=" + lesExceptions + '}';
+    }
 }
