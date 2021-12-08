@@ -41,37 +41,24 @@ public class Event {
      * @return true if the event occurs on that day, false otherwise
      */
     public boolean isInDay(LocalDate aDay) {
-
+        
+        //Si aucune n'est condition ci-dessous ne correspond, res = false
         boolean res=false;
        
         LocalDate dateStart= this.myStart.toLocalDate();
         LocalDate dateFin=this.myStart.plusMinutes(this.myDuration.toMinutes()).toLocalDate();
         
-        
-        //si date debut ou date de fin égale date en paramètre, retourne true
-
+        //si date debut ou date de fin égale date en paramètre, res = true
         if(dateStart.equals(aDay)|| dateFin.equals(aDay)){
-                res=true;
-                
+                res=true;      
         }
 
-        //si date en paramètre est compris entre la date de debut et la date de fin, retourne true
+        //si date en paramètre est comprise entre la date de debut et la date de fin, res = true
         if(dateStart.isBefore(aDay) && dateFin.isAfter(aDay)){
-         
                 res=true;
-
             }
-
             return res;
-        }
-
-       
-        
-        
-            
-    
-
-      
+        }     
    
     @Override
     public String toString() {
@@ -92,14 +79,10 @@ public class Event {
         return myStart;
     }
 
-
     /**
      * @return the myDuration
      */
     public Duration getDuration() {
         return myDuration;
-    }
-
-   
-    
+    } 
 }
