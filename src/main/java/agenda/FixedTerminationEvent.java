@@ -5,13 +5,16 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
+import java.util.*;
+
 /**
  * Description : A repetitive event that terminates after a given date, or after
  * a given number of occurrences
  */
 public class FixedTerminationEvent extends RepetitiveEvent {
 
-    
+    LocalDate terminationInclusive=null;
+    long numberOfOccurrences=0;
     /**
      * Constructs a fixed terminationInclusive event ending at a given date
      *
@@ -28,8 +31,9 @@ public class FixedTerminationEvent extends RepetitiveEvent {
      */
     public FixedTerminationEvent(String title, LocalDateTime start, Duration duration, ChronoUnit frequency, LocalDate terminationInclusive) {
          super(title, start, duration, frequency);
-        // TODO : implémenter cette méthode
-        throw new UnsupportedOperationException("Pas encore implémenté");
+         this.terminationInclusive=terminationInclusive;
+         
+         
 
     }
 
@@ -49,8 +53,7 @@ public class FixedTerminationEvent extends RepetitiveEvent {
      */
     public FixedTerminationEvent(String title, LocalDateTime start, Duration duration, ChronoUnit frequency, long numberOfOccurrences) {
         super(title, start, duration, frequency);
-        // TODO : implémenter cette méthode
-        throw new UnsupportedOperationException("Pas encore implémenté");
+        this.numberOfOccurrences=numberOfOccurrences;
     }
 
     /**
@@ -58,13 +61,27 @@ public class FixedTerminationEvent extends RepetitiveEvent {
      * @return the termination date of this repetitive event
      */
     public LocalDate getTerminationDate() {
-        // TODO : implémenter cette méthode
-        throw new UnsupportedOperationException("Pas encore implémenté");   
+        return this.terminationInclusive;   
     }
 
     public long getNumberOfOccurrences() {
-        // TODO : implémenter cette méthode
-        throw new UnsupportedOperationException("Pas encore implémenté");
+        return this.numberOfOccurrences;
     }
-        
+
+    @Override
+    public String toString() {
+        String desc="";
+        if(this.numberOfOccurrences!=0)
+            desc =   super.toString() +"FixedTerminationEvent [numberOfOccurrences=" + numberOfOccurrences + "]";
+
+        else{
+
+            desc = super.toString() + "FixedTerminationEvent [" + "terminationInclusive="
+                    + terminationInclusive + "]";
+        }
+
+        return desc;
+    }
+    
+    
 }
