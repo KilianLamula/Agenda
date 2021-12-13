@@ -13,8 +13,8 @@ import java.util.*;
  */
 public class FixedTerminationEvent extends RepetitiveEvent {
 
-    LocalDate terminationInclusive=null;
-    long numberOfOccurrences=0;
+    protected LocalDate terminationInclusive;
+    protected long numberOfOccurrences;
     /**
      * Constructs a fixed terminationInclusive event ending at a given date
      *
@@ -32,9 +32,8 @@ public class FixedTerminationEvent extends RepetitiveEvent {
     public FixedTerminationEvent(String title, LocalDateTime start, Duration duration, ChronoUnit frequency, LocalDate terminationInclusive) {
          super(title, start, duration, frequency);
          this.terminationInclusive=terminationInclusive;
-         
-         
-
+         //On détermine le nombre d'occurence avec une méthode (car pas dans les paramètres) :
+         this.numberOfOccurrences=determinerOccurrences();
     }
 
     /**
@@ -51,9 +50,11 @@ public class FixedTerminationEvent extends RepetitiveEvent {
      * </UL>
      * @param numberOfOccurrences the number of occurrences of this repetitive event
      */
-    public FixedTerminationEvent(String title, LocalDateTime start, Duration duration, ChronoUnit frequency, long numberOfOccurrences) {
+    public FixedTerminationEvent(String title, LocalDateTime start, Duration duration, ChronoUnit frequency, long numberOfOccurrences){
         super(title, start, duration, frequency);
         this.numberOfOccurrences=numberOfOccurrences;
+        //On détermine la date de fin avec une méthode (car pas dans les paramètres) :
+        this.terminationInclusive=determinerTerminationInclusive();
     }
 
     /**
@@ -70,18 +71,28 @@ public class FixedTerminationEvent extends RepetitiveEvent {
 
     @Override
     public String toString() {
-        String desc="";
-        if(this.numberOfOccurrences!=0)
-            desc =   super.toString() +"FixedTerminationEvent [numberOfOccurrences=" + numberOfOccurrences + "]";
-
-        else{
-
-            desc = super.toString() + "FixedTerminationEvent [" + "terminationInclusive="
-                    + terminationInclusive + "]";
-        }
-
-        return desc;
+        return "FixedTerminationEvent{" + "terminationInclusive=" + terminationInclusive + ", numberOfOccurrences=" + numberOfOccurrences + '}';
     }
     
+    //Méthode pour déterminer le nombre d'occurences :
+    public long determinerOccurrences(){
+        //until permet de calculer le temps jusqu’à une autre date (date de fin) en fonction de l’unité spécifiée (fréquence)
+        //Rq : on rajoute 1 pour prendre en compte l'occurence de la date de départ
+        return this.getStart().toLocalDate().until(terminationInclusive, frequency) + 1;
+    }
     
+    //Méthode pour déterminer la date de fin :
+    public LocalDate determinerTerminationInclusive() {
+        if(frequency == ChronoUnit.DAYS){
+            return this.getStart().plus(this.getNumberOfOccurrences() - 1, ChronoUnit.DAYS).toLocalDate();
+        }
+        if(frequency == ChronoUnit.WEEKS){
+            return this.getStart().plus(this.getNumberOfOccurrences() - 1, ChronoUnit.WEEKS).toLocalDate();
+        }
+        if(frequency == ChronoUnit.MONTHS){
+            return this.getStart().plus(this.getNumberOfOccurrences() - 1, ChronoUnit.MONTHS).toLocalDate();
+        }
+        //Sinon l'event se termine le jour même
+        else return this.getStart().toLocalDate();
+    }
 }

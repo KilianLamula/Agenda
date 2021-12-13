@@ -56,6 +56,14 @@ public class FixedTerminationEventTest {
         assertTrue(fixedTermination.isInDay(nov_1_2020.plus(6, ChronoUnit.WEEKS)), "Cet événement se produit toutes les semaines");
         assertTrue(fixedRepetitions.isInDay(nov_1_2020.plus(6, ChronoUnit.WEEKS)), "Cet événement se produit toutes les semaines");
     }
+    
+    //Rajout : pour tester les mois
+    @Test
+    public void eventOccurs1MonthAfter() {
+        FixedTerminationEvent fixedRepetitionsMonths = new FixedTerminationEvent("Fixed termination weekly", nov_1__2020_22_30, min_120, ChronoUnit.MONTHS, 10);
+        assertTrue(fixedRepetitionsMonths.isInDay(nov_1_2020.plus(1, ChronoUnit.MONTHS)), "Cet événement se produit tous les mois");
+        assertFalse(fixedRepetitionsMonths.isInDay(nov_1_2020.plus(13, ChronoUnit.MONTHS)), "La date devrait être false");
+    }
 
     @Test
     public void eventIsNotInExceptionDays() {
@@ -65,6 +73,31 @@ public class FixedTerminationEventTest {
         assertFalse(fixedTermination.isInDay(nov_1_2020.plus(2, ChronoUnit.WEEKS)), "Cet événement ne se produit pas à W+2");
         assertTrue(fixedTermination.isInDay(nov_1_2020.plus(3, ChronoUnit.WEEKS)), "Cet événement se produit toutes les semaines");
         assertFalse(fixedTermination.isInDay(nov_1_2020.plus(4, ChronoUnit.WEEKS)), "Cet événement ne se produit pas à W+4");
+    }
+    
+    //Rajout : test toString()
+    @Test
+    public void toStringShowsEventTerminationAndOccurences() {
+        assertTrue(fixedTermination.toString().contains("2021-01-05") && fixedRepetitions.toString().contains("10"), "toString() invalide");
+    }
+    
+    //Rajout : tests(x3) méthode determinerTerminationInclusive()
+    @Test
+    public void testDeterminerTerminationInclusiveDays() {
+        FixedTerminationEvent EventDayRepet = new FixedTerminationEvent("Day", nov_1__2020_22_30, min_120, ChronoUnit.DAYS, 3);
+        assertEquals(LocalDate.of(2020, 11, 3), EventDayRepet.determinerTerminationInclusive(), "Date de fin mal déterminée");
+    }
+    
+    @Test
+    public void testDeterminerTerminationInclusiveWeeks() {
+        FixedTerminationEvent EventWeekRepet = new FixedTerminationEvent("Week", nov_1__2020_22_30, min_120, ChronoUnit.WEEKS, 2);
+        assertEquals(LocalDate.of(2020, 11, 8), EventWeekRepet.determinerTerminationInclusive(), "Date de fin mal déterminée");
+    }
+    
+    @Test
+    public void testDeterminerTerminationInclusiveMonths() {
+        FixedTerminationEvent EventMonthRepet = new FixedTerminationEvent("Month", nov_1__2020_22_30, min_120, ChronoUnit.MONTHS, 3);
+        assertEquals(LocalDate.of(2021, 1, 1), EventMonthRepet.determinerTerminationInclusive(), "Date de fin mal déterminée");
     }
 
 }
