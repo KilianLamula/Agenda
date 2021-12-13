@@ -23,12 +23,12 @@ public class RepetitiveEvent extends Event {
      */
     
     protected ChronoUnit frequency;
-    protected ArrayList<LocalDate> lesExceptions;
+    protected ArrayList<LocalDate> lesExceptions= new ArrayList<LocalDate>();;
     
     public RepetitiveEvent(String title, LocalDateTime start, Duration duration, ChronoUnit frequency) {
         super(title, start, duration);
         this.frequency = frequency;
-        this.lesExceptions = new ArrayList<LocalDate>();
+        
     }
 
     /**
@@ -65,7 +65,7 @@ public class RepetitiveEvent extends Event {
         
         //Cas semaine
         if(frequency == ChronoUnit.WEEKS){
-            //Il y a 53 jours dans une année, on est obligé de toutes les vérifier
+            //Il y a 53 semaines dans une année, on est obligé de toutes les vérifier
             for(int i = 0; i < 53; i++){
                 //On vérifie à chaque fois en ajoutant une semaine si le jour correspond
                 if(this.getStart().toLocalDate().plus(i, ChronoUnit.WEEKS).equals(aDay)) return true;
